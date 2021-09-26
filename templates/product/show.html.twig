@@ -3,8 +3,8 @@
 {% block title %}Product{% endblock %}
 
 {% block body %}
-
-    <div class="container mt-4">
+<div class="jumbotron">
+    <div class="container">
         <div class="row">
             <div class="col-md-8">
 
@@ -20,9 +20,39 @@
                     {% endfor %}
                 </h3>
                 <div class="text-primary" style="font-size: 4em;font-weight: bold;">{{ product.formattedPrice }}</div>
+                <a href="#" class="btn btn-primary">Contacter l'agence</a>
             </div>
         </div>
+    </div>
+</div>
+    <div class="container mt-4">
 
+        <p>
+            {{ product.description | nl2br }}
+        </p>
+        <div class="row">
+            <div class="col-md-8">
+                <h2>specificité</h2>
+                <table class="table table-striped">
+                    <tr>
+                        <td>Unit Price</td>
+                        <td>{{ product.unitPrice }}</td>
+                    </tr>
+                    <tr>
+                        <td>Unit Number</td>
+                        <td>{{ product.unitNumber }}</td>
+                    </tr>
+                    <tr>
+                        <td>Created At</td>
+                        <td>{{ product.unitNumber }}</td>
+                    </tr>
+                    <tr>
+                        <td>Updated At</td>
+                        <td>{{ product.unitNumber }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 
     <a href="{{ path('product_edit', {'id': product.id}) }}">edit</a>

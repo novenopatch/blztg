@@ -37,6 +37,10 @@ class Product
      */
     private $soldUnit;
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $description;
+    /**
      * @ORM\Column(type="datetime_immutable")
      */
     private $createdAt;
@@ -214,5 +218,17 @@ class Product
     }
     public  function  getFormattedPrice():string{
         return number_format($this->getUnitPrice(),0,'',' ');
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }
