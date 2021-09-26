@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -47,4 +48,35 @@ class ProductRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @return array Product[]
+     */
+    public function findProductsAvailable( ): array
+    {
+        return $this->findAllIsNotSoldQuery()
+            #->orderBy('p.id', 'ASC')
+           # ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return array Product[]
+     */
+    public function findLatest():array
+    {
+        return $this->findAllIsNotSoldQuery()
+            #->orderBy('p.id', 'ASC')
+             ->setMaxResults(4)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+    private function findAllIsNotSoldQuery(): QueryBuilder{
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.unitNumber > :val')
+            ->setParameter('val', 0);
+    }
 }

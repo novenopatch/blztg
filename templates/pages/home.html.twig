@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block title %}Product index{% endblock %}
+
+{% block body %}
+    <div class="jumbotron text-center">
+        <h1>Agence blbla</h1>
+        <p>jfrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrndncr</p>
+
+    </div>
+    <div class="container">
+        <h2>last add</h2>
+        <div class="row flex">
+            {%  for product in products %}
+                <div class="col-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="#">{{ product.name }}</a>
+                            </h5>
+                            <p class="card-text">{{ product.description }}</p>
+                            <p class="card-text">(x{{product.unitNumber  }})</p>
+                            <div class="text-primary" style="font-weight: bold;font-size: 2rem;">{{ product.getFormattedPrice}}</div>
+                        </div>
+
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}

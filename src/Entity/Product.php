@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,13 +27,15 @@ class Product
     /**
      * @ORM\Column(type="integer")
      */
-    private $unitPrice;
-
+    private $unitNumber;
     /**
      * @ORM\Column(type="integer")
      */
-    private $intNumber;
-
+    private $unitPrice;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $soldUnit;
     /**
      * @ORM\Column(type="datetime_immutable")
      */
@@ -41,6 +45,30 @@ class Product
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $updatedAt;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="products")
+     */
+    private $HisCategory;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=TheBrand::class, inversedBy="products")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $hisBrand;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SalesHistory::class, mappedBy="product")
+     */
+    private $salesHistories;
+
+
+
+    public function __construct()
+    {
+        $this->HisCategory = new ArrayCollection();
+        $this->salesHistories = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -71,14 +99,14 @@ class Product
         return $this;
     }
 
-    public function getIntNumber(): ?int
+    public function getUnitNumber(): ?int
     {
-        return $this->intNumber;
+        return $this->unitNumber;
     }
 
-    public function setIntNumber(int $intNumber): self
+    public function setUnitNumber(int $unitNumber): self
     {
-        $this->intNumber = $intNumber;
+        $this->unitNumber = $unitNumber;
 
         return $this;
     }
@@ -105,5 +133,86 @@ class Product
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Category[]
+     */
+    public function getHisCategory(): Collection
+    {
+        return $this->HisCategory;
+    }
+
+    public function addHisCategory(Category $hisCategory): self
+    {
+        if (!$this->HisCategory->contains($hisCategory)) {
+            $this->HisCategory[] = $hisCategory;
+        }
+
+        return $this;
+    }
+
+    public function removeHisCategory(Category $hisCategory): self
+    {
+        $this->HisCategory->removeElement($hisCategory);
+
+        return $this;
+    }
+
+    public function getHisBrand(): ?TheBrand
+    {
+        return $this->hisBrand;
+    }
+
+    public function setHisBrand(?TheBrand $hisBrand): self
+    {
+        $this->hisBrand = $hisBrand;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SalesHistory[]
+     */
+    public function getSalesHistories(): Collection
+    {
+        return $this->salesHistories;
+    }
+
+    public function addSalesHistory(SalesHistory $salesHistory): self
+    {
+        if (!$this->salesHistories->contains($salesHistory)) {
+            $this->salesHistories[] = $salesHistory;
+            $salesHistory->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSalesHistory(SalesHistory $salesHistory): self
+    {
+        if ($this->salesHistories->removeElement($salesHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($salesHistory->getProduct() === $this) {
+                $salesHistory->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSoldUnit(): ?int
+    {
+        return $this->soldUnit;
+    }
+
+    public function setSoldUnit(?int $soldUnit): self
+    {
+        $this->soldUnit = $soldUnit;
+
+        return $this;
+    }
+    public  function  getFormattedPrice():string{
+        return number_format($this->getUnitPrice(),0,'',' ');
     }
 }
